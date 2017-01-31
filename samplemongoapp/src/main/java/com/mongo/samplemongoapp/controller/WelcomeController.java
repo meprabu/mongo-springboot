@@ -50,9 +50,7 @@ public class WelcomeController {
 	@RequestMapping(value = "/login", method=RequestMethod.POST)
 	public String processLogin(Model model, @ModelAttribute UserForm userForm) {	
 		
-		System.out.println("--------------------------------------------------------------------> in login");
-		
-		if(userForm.getUserName().equals("prabu") && userForm.getPassword().equals("test")){
+		if(userForm.getUserName().equalsIgnoreCase("prabu") && userForm.getPassword().equalsIgnoreCase("test")){
 			model.addAttribute("message", "Hello welcome to login");
 			return "success";
 		}else{
