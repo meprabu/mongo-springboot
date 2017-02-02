@@ -14,18 +14,24 @@
  * limitations under the License.
  */
 
-package com.mongo.samplemongoapp.dao;
+package com.mongo.samplemongoapp;
 
-import java.util.List;
-import com.mongo.samplemongoapp.domain.Customer;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
-import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.data.repository.CrudRepository;
+@SpringBootApplication
+@EnableMongoRepositories("com.mongo.samplemongoapp.dao")
+public class SampleWebJspApplication {
+	
 
-public interface CustomerRepository extends CrudRepository<Customer, String> {
+	
 
-	public Customer findByFirstName(String firstName);
-
-	public List<Customer> findByLastName(String lastName);
-
+	public static void main(String[] args) throws Exception {
+		SpringApplication.run(SampleWebJspApplication.class, args);
+	}
+		
+	
+	 
+	
 }
