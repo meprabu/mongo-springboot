@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>signup</title>
+</head>
+<body>
+
+	<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"></link>
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous"></link>
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+ <p th:text="'Hello, ' + ${session.userName} + '!'" />
+
+  	<a th:href="@{'/authorBlogPost/'}"> Blog Home</a>
+
+	<div class="col-md-12">
+				<div class="col-md-1"></div>
+				<div class="col-md-8" >
+					 <b><p th:text="${blog.getTitle()}"/></b>
+					 <p th:text="${blog.getBody()}" />
+					 <p th:text="${blog.getTags()}" />
+					 <br/>
+					 
+					 <div th:each="comment : ${blog.getComments()}">
+					 
+					  <p th:text="${comment.getCommentDate()}"/>
+					  <p th:text="${comment.getUserid()}" />
+					  <p th:text="${comment.getComment()}" />
+					 
+					 </div>
+					 
+					 <form action="#" th:action="@{/addComments}" th:object="${comment}" method="post" class="form-horizontal">
+					 <!-- 
+						 <div class="col-md-6">
+						 	<input class="form-control" type="text"  th:field="*{userid}"/>
+							<textarea class="form-control" rows="10" th:field="*{comment}"></textarea>
+						 </div> -->
+						 
+						  <div class="col-md-6">
+							  <div class="form-group" >
+							    <label for="exampleInputEmail1">Userid</label>
+							    <input class="form-control" type="text"  size="8" th:field="*{userid}"/>
+							  </div>
+							  <div class="form-group">
+							    <label for="exampleInputEmail1">Comments</label>
+							   <textarea class="form-control" rows="10" th:field="*{comment}"></textarea>
+							  </div>
+							  
+							  <div class="form-group">
+							   	<div class="col-md-1">
+									<input type="submit" value="Add Comment" class="btn btn-primary"/> 
+								</div>
+							  </div>
+							  <input type="hidden" name="permalink" th:value="${blog.getPermalink()}"></input>
+						  </div>
+					</form>
+				</div>
+				<div class="col-md-2"></div>
+		</div>
+
+
+
+</body>
+</html>

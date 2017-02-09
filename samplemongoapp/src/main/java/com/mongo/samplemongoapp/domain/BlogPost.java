@@ -1,5 +1,7 @@
 package com.mongo.samplemongoapp.domain;
 
+import java.util.ArrayList;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -14,8 +16,8 @@ public class BlogPost {
 		  "text" : 'My test article',
 
 		  "comments" : [
-		    { 'text' : 'blah', 'user_id' : 654321, 'votes' : [987654]},
-		    { 'text' : 'foo', 'user_id' : 987654, 'votes' : [12345, 654321] },
+		    { 'comment' : 'blah', 'user_id' : 654321, 'date' : ISODate("2013-04-06T23:17:35.530Z")},
+		    { 'comment' : 'foo', 'user_id' : 987654, 'date' : ISODate("2013-04-06T23:17:35.530Z") },
 		    ...
 		  ]
 }*/
@@ -26,7 +28,7 @@ public class BlogPost {
 	private String permalink;
 	private String title;
 	private String tags;
-	private String[] comments;
+	private ArrayList<Comments> comments;
 	public String getAuthor() {
 		return author;
 	}
@@ -51,10 +53,10 @@ public class BlogPost {
 	public void setTags(String tags) {
 		this.tags = tags;
 	}
-	public String[] getComments() {
+	public ArrayList<Comments> getComments() {
 		return comments;
 	}
-	public void setComments(String[] comments) {
+	public void setComments(ArrayList<Comments> comments) {
 		this.comments = comments;
 	}
 	public String getTitle() {

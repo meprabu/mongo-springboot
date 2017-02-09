@@ -18,8 +18,11 @@ package com.mongo.samplemongoapp.controller;
 
 import java.security.SecureRandom;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,7 +34,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.mongo.samplemongoapp.bean.UserForm;
-import com.mongo.samplemongoapp.dao.CustomerRepository;
+import com.mongo.samplemongoapp.dao.BlogPostRepository;
 import com.mongo.samplemongoapp.dao.UserRepository;
 import com.mongo.samplemongoapp.domain.BlogPost;
 import com.mongo.samplemongoapp.domain.Users;
@@ -43,7 +46,7 @@ public class WelcomeController {
 	@Autowired
 	UserRepository userRepository;
 	@Autowired
-	CustomerRepository customerRepository;
+	BlogPostRepository blogpostRepo;
 	
 	@Value("${application.message:Hello World}")
 	private String message = "Hello World";
@@ -68,20 +71,25 @@ public class WelcomeController {
 	}
 	
 	@RequestMapping(value = "/authorBlogPost", method=RequestMethod.GET)
-	public String gotoBlog(Model model) {	
-		model.addAttribute("blogPost", new BlogPost());
-		return "authorBlogPost";
+	public String gotoBlog(Model model,HttpServletRequest request) {	
+		String userName = (String) request.getSession().getAttribute("userName");
+		List<BlogPost> blogs = blogpostRepo.findByAuthor(userName);
+		model.addAttribute("userName", userName);
+		model.addAttribute("allBlogs", blogs);
+		
+		return "blogHome";
 	}
 	
 	@RequestMapping(value = "/login", method=RequestMethod.POST)
-	public String processLogin(Model model, @ModelAttribute UserForm userForm, BindingResult result) {	
+	public String processLogin(Model model, @ModelAttribute UserForm userForm, BindingResult result, HttpServletRequest request) {	
 		Users user = userRepository.findOne(userForm.getUserName());
 		if(null!=user && userForm.getUserName().equalsIgnoreCase(user.getUserName())){
 			String salt = (user.getPassword().toString()).split(",")[1];
 			
 			if(user.getPassword().toString().equals(MongoAppUtility.makePasswordHash(userForm.getPassword().toString(), salt))){
 				model.addAttribute("message", "Welcome "+ userForm.getUserName());
-				return "authorBlogPost";
+				request.getSession().setAttribute("userName", userForm.getUserName());
+				return "redirect:authorBlogPost";
 			}else{
 				result.rejectValue("password", "error.userForm", "Password Incorrect. Try again.");
 				model.addAllAttributes(result.getAllErrors());
@@ -120,12 +128,5 @@ public class WelcomeController {
 		return "redirect:login";
 	}
 	
-	
-	@RequestMapping(value = "/postBlog", method=RequestMethod.POST)
-	public String postBlog(Model model) {	
 		
-		return "authorBlogPost";
-	}
-	
-
 }
